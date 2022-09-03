@@ -22,7 +22,7 @@ export default function Head(props) {
         <ul className="flex flex-wrap items-center mt-3 sm:mt-0">
           <li>
             <a
-              href="~/about-me"
+              href="./about-me"
               className="mr-4 text-sm text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
             >
               About
@@ -30,7 +30,7 @@ export default function Head(props) {
           </li>
           <li>
             <a
-              href="~/what-do-I-teach"
+              href="./what-do-I-teach"
               className="mr-4 text-sm text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
             >
               What do I teach?
@@ -38,7 +38,7 @@ export default function Head(props) {
           </li>
           <li>
             <a
-              href="~/prices"
+              href="./prices"
               className="mr-4 text-sm text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
             >
               Prices
