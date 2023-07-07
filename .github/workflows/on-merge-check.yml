@@ -18,7 +18,7 @@ jobs:
       - name: Get changed files
         id: changed_files
         run: |
-          echo "::set-output name=changed_files::$(git rev-parse --short HEAD)"
+          echo "::set-output name=changed_files::$(git diff --name-only HEAD)"
 
       - name: Check for package.json changes
         id: package_json_changes
