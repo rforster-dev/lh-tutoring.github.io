@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_pipeline:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
@@ -16,8 +16,8 @@ jobs:
       - name: Get previous commit SHA
         id: prev_commit
         run: |
-          PREV_SHA=$(git rev-parse HEAD^)
-          echo "::set-output name=prev_sha::git rev-parse HEAD^"
+          PREV_SHA=$(git log -1 --pretty=format:%H HEAD~1)
+          echo "::set-output name=prev_sha::$PREV_SHA"
 
       - name: Check for changes in package.json
         id: check_changes
