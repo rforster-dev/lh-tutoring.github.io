@@ -16,9 +16,7 @@ jobs:
       - name: Check for changes in package.json
         id: check_changes
         run: |
-          git fetch
-          PREV_COMMIT=$(git rev-list --max-parents=0 HEAD)
-          CHANGED_FILES=$(git diff --name-only $PREV_COMMIT HEAD | grep -E "package\.json$" || true)
+          CHANGED_FILES=$(git diff --name-only $(curl -s "${{ github.event.compare }}" | jq -r '.base_commit.sha')...HEAD | grep -E "package\.json$" || true)
           if [[ -n "$CHANGED_FILES" ]]; then
             echo "::set-output name=changed::true"
           else
