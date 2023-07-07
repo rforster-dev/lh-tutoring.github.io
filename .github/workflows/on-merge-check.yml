@@ -23,6 +23,7 @@ jobs:
         id: check_changes
         run: |
           CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD)
+          echo "$CHANGED_FILES"
           echo "::set-output name=changed_files::$CHANGED_FILES"
 
       - name: Trigger pipeline check
