@@ -22,16 +22,10 @@ jobs:
       - name: Check for changes in package.json
         id: check_changes
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD | grep -E "package\.json$" || true)
-          echo "$CHANGED_FILES"
-          if [[ -n "$CHANGED_FILES" ]]; then
-            echo "::set-output name=changed::true"
-          else
-            echo "::set-output name=changed::false"
-          fi
-
+          CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD
+          echo "::set-output name=changedfiles:[[$CHANGED_FILES]]"
       - name: Trigger pipeline check
-        if: ${{ steps.check_changes.outputs.changed == 'true' }}
+        if: contains(${{ steps.check_changes.outputs.changedfiles == 'true' }}. 'package.json')
         run: |
           # Perform actions to trigger pipeline check, e.g., API call or running a script
           echo "Pipeline check triggered"
