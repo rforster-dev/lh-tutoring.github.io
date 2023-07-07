@@ -23,7 +23,7 @@ jobs:
         id: check_changes
         run: |
           CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD | grep -E "package\.json$" || true)
-          echo "-n "$CHANGED_FILES" "
+          echo "$CHANGED_FILES
           if [[ -n "$CHANGED_FILES" ]]; then
             echo "::set-output name=changed::true"
           else
