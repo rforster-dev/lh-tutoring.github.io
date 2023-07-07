@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_pipeline:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
@@ -17,8 +17,13 @@ jobs:
         id: check_changes
         run: |
           git fetch
-          git diff --name-only HEAD^ HEAD | grep -E "package\.json$" || echo "::set-output name=changed::false"
-          echo "::set-output name=changed::true"
+          PREV_COMMIT=$(git rev-list --max-parents=0 HEAD)
+          CHANGED_FILES=$(git diff --name-only $PREV_COMMIT HEAD | grep -E "package\.json$" || true)
+          if [[ -n "$CHANGED_FILES" ]]; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
 
       - name: Trigger pipeline check
         if: ${{ steps.check_changes.outputs.changed == 'true' }}
