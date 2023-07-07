@@ -22,8 +22,9 @@ jobs:
       - name: Check for changes in package.json
         id: check_changes
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD
+          CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD)
           echo "::set-output name=changedfiles:[[$CHANGED_FILES]]"
+
       - name: Trigger pipeline check
         if: contains(${{ steps.check_changes.outputs.changedfiles == 'true' }}. 'package.json')
         run: |
