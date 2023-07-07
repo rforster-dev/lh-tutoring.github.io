@@ -1,0 +1,27 @@
+name: Pipeline Check
+
+on:
+  push:
+    branches-ignore:
+      - "*"
+
+jobs:
+  check_pipeline:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Check for changes in package.json
+        id: check_changes
+        run: |
+          git fetch
+          git diff --name-only HEAD^ HEAD | grep -E "package\.json$" || echo "::set-output name=changed::false"
+          echo "::set-output name=changed::true"
+
+      - name: Trigger pipeline check
+        if: ${{ steps.check_changes.outputs.changed == 'true' }}
+        run: |
+          # Perform actions to trigger pipeline check, e.g., API call or running a script
+          echo "Pipeline check triggered"
