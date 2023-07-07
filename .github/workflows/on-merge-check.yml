@@ -16,13 +16,13 @@ jobs:
       - name: Get previous commit SHA
         id: prev_commit
         run: |
-          PREV_SHA=$(git log -1 --pretty=format:%H HEAD~1)
-          echo "::set-output name=prev_sha::$PREV_SHA"
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Check for changes in package.json
         id: check_changes
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.prev_sha }} HEAD | grep -E "package\.json$" || true)
+          CHANGED_FILES=$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD | grep -E "package\.json$" || true)
           if [[ -n "$CHANGED_FILES" ]]; then
             echo "::set-output name=changed::true"
           else
