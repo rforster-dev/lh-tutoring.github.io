@@ -26,4 +26,4 @@ jobs:
 
       - name: Trigger pipeline check
 
-        run: echo "${{steps.check_changes.outputs.changed_files}}""
+        run: echo "${{steps.check_changes.outputs.changed_files}}"
