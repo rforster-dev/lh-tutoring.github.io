@@ -1,50 +1,29 @@
-name: Check Package.json Changes
+name: Pipeline Check
 
 on:
-  pull_request:
-    types:
-      - synchronize
-      - opened
-      - reopened
+  push:
+    branches-ignore:
+      - "*"
 
 jobs:
-  check_package_json_changes:
+  check_pipeline:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Get changed files
-        id: changed_files
+      - name: Get previous commit SHA
+        id: prev_commit
         run: |
-          echo "::set-output name=changed_files::$(git diff --name-only ${{ github.base_ref }}...${{ github.head_ref }})"
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      - name: Check for package.json changes
-        id: package_json_changes
+      - name: Check for changes in package.json
+        id: check_changes
         run: |
-          CHANGED_FILES="${{ steps.changed_files.outputs.changed_files }}"
-          if [[ "$CHANGED_FILES" =~ "package.json" ]]; then
-            echo "::set-output name=package_json_changed::true"
-          else
-            echo "::set-output name=package_json_changed::false"
-          fi
+          echo "::set-output name=changed_files::$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD)"
 
-      - name: Comment on pull request
-        if: steps.package_json_changes.outputs.package_json_changed == 'true'
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const context = github.context;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const prNumber = context.issue.number;
-            const commentBody = 'Warning: The `package.json` file has changed in this pull request.';
+      - name: Trigger pipeline check
 
-            github.issues.createComment({
-              owner: owner,
-              repo: repo,
-              issue_number: prNumber,
-              body: commentBody
-            });
+        run: echo "${{steps.check_changes.outputs.changed_files}}"
