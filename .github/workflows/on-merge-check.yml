@@ -25,7 +25,5 @@ jobs:
           echo "::set-output name=changed_files::$(git diff --name-only ${{ steps.prev_commit.outputs.sha_short }} HEAD)"
 
       - name: Trigger pipeline check
-        if: contains(steps.check_changes.outputs.changed_files, 'package.json')
-        run: |
-          # Perform actions to trigger pipeline check, e.g., API call or running a script
-          echo "Pipeline check triggered"
+
+        run: echo "${{steps.check_changes.outputs.changed_files}}""
